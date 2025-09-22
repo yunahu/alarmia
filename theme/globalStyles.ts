@@ -7,4 +7,12 @@ export const createGlobalStyles = (theme: Theme) =>
     background: {
       backgroundColor: theme.colors.black,
     },
+    center: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    text: {
+      color: theme.colors.white,
+    },
   });
