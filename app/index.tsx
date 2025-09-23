@@ -1,15 +1,19 @@
-import { Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-export default function Index() {
+import HomeMenu from '@/components/HomeMenu';
+
+const HomeScreen = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Text>Hello World!</Text>
+    <View style={styles.container}>
+      <HomeMenu />
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
+export default HomeScreen;
