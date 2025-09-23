@@ -1,14 +1,20 @@
 import Feather from '@expo/vector-icons/Feather';
 import { Text } from '@ui-kitten/components';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
-const MoreIcon = () => {
+interface MoreIconProps {
+	onPress: () => void;
+}
+
+const MoreButton = (
+	props: MoreIconProps
+) => {
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} {...props}>
       <Text>
         <Feather name="more-horizontal" style={styles.icon} />
       </Text>
-    </View>
+		</Pressable>
   );
 };
 
@@ -25,4 +31,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MoreIcon;
+export default MoreButton;

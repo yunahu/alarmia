@@ -2,7 +2,8 @@ import { Layout } from '@ui-kitten/components';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import AlarmCard from '@/components/Alarm';
-import MoreIcon from '@/components/MoreIcon';
+import OverflowMenu from '@/components/HomeOverflowMenu';
+import MoreButton from '@/components/MoreButton';
 import NextAlarm from '@/components/NextAlarm';
 import alarms from '@/data/alarms';
 
@@ -12,8 +13,9 @@ const HomeScreen = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <NextAlarm />
         <View style={styles.moreIconContainer}>
-          <MoreIcon></MoreIcon>
+          <MoreButton onPress={() => {}}></MoreButton>
         </View>
+        <OverflowMenu />
         <View style={styles.alarmContainer}>
           {alarms.map((x) => (
             <AlarmCard key={x.id} alarm={x} />

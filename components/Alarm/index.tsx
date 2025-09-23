@@ -2,7 +2,7 @@ import { Layout, LayoutProps, Text, Toggle } from '@ui-kitten/components';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import MoreIcon from '@/components/MoreIcon';
+import MoreButton from '@/components/MoreButton';
 
 export interface Alarm {
 	id: number;
@@ -31,7 +31,7 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
       </View>
       <View style={styles.rightContainer}>
         <Toggle checked={checked} onChange={onCheckedChange} />
-        <MoreIcon />
+        <MoreButton onPress={()=>{}} />
       </View>
     </Layout>
   );
