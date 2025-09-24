@@ -24,7 +24,7 @@ const HomeScreen = () => {
           <AlarmCard key={x.id} alarm={x} />
         ))}
       </ScrollView>
-      <AddButton onPress={() => alert('pressed')} />
+      <AddButton />
     </View>
   );
 };
