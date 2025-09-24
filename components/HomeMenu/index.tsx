@@ -4,7 +4,7 @@ const items: MenuItem[] = [
   {
     key: 'settings',
     title: 'Settings',
-    onPress: () => {},
+    href: '/settings',
   },
 ];
 

@@ -10,9 +10,16 @@ export default function RootLayout() {
             backgroundColor: 'black',
           },
           headerTintColor: 'white',
+          headerShown: false,
         }}
       >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="index" />
+        <Stack.Screen name="alarms/new" />
+        <Stack.Screen name="alarms/[id]" />
+        <Stack.Screen
+          name="settings"
+          options={{ headerShown: true, title: 'Settings' }}
+        />
       </Stack>
     </PaperProvider>
   );

@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
 import { Divider, Switch, Text } from 'react-native-paper';
@@ -19,7 +20,12 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
   const [isOn, setIsOn] = useState(false);
 
   return (
-    <View>
+    <Link
+      href={{
+        pathname: '/alarm/[id]',
+        params: { id: alarm.id },
+      }}
+    >
       <View style={styles.container} {...rest}>
         <View style={styles.leftContainer}>
           {alarm.description && (
@@ -34,7 +40,7 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
         </View>
       </View>
       <Divider style={styles.divider} />
-    </View>
+    </Link>
   );
 };
 

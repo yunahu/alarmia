@@ -1,11 +1,11 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { Divider } from 'react-native-paper';
 
 import AddButton from '@/components/AddButton';
 import AlarmCard from '@/components/Alarm';
 import HomeMenu from '@/components/HomeMenu';
 import NextAlarm from '@/components/NextAlarm';
 import alarms from '@/data/alarms';
-import { Divider } from 'react-native-paper';
 
 const HomeScreen = () => {
   return (
