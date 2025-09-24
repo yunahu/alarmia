@@ -1,43 +1,54 @@
-import {
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker';
 import { useState } from 'react';
-import { Button, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
+import { TimePickerModal } from 'react-native-paper-dates';
+
+interface Time24 {
+  hours: number;
+  minutes: number;
+}
+
+const getNow = (): Time24 => {
+  const now = new Date();
+  return { hours: now.getHours(), minutes: now.getMinutes() };
+};
 
 const NewAlarmScreen = () => {
-  const [date, setDate] = useState<Date>(new Date(1598051730000));
-
-  const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    if (selectedDate) setDate(selectedDate);
-  };
-
-  const showMode = (currentMode: 'date' | 'time') => {
-    DateTimePickerAndroid.open({
-      value: date,
-      onChange,
-      mode: currentMode,
-      is24Hour: true,
-    });
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-  const showTimepicker = () => {
-    showMode('time');
+  const [visible, setVisible] = useState(false);
+  const [time, setTime] = useState<Time24>(getNow());
+  const onConfirm = (time24: Time24) => {
+    setTime(time24);
+    setVisible(false);
   };
 
   return (
-    <View>
-      <Text>new alarm screen</Text>
-      <Button onPress={showDatepicker} title="Show date picker!" />
-      <Button onPress={showTimepicker} title="Show time picker!" />
-      <Text>selected: {date.toLocaleString()}</Text>
+    <View style={styles.container}>
+      <Text>
+        {time.hours}:{time.minutes}
+      </Text>
+      <Button onPress={() => setVisible(true)} uppercase={false}>
+        Edit time
+      </Button>
+      <TimePickerModal
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        onConfirm={onConfirm}
+        hours={time.hours}
+        minutes={time.minutes}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'black',
+    paddingTop: 30,
+    paddingBottom: 50,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default NewAlarmScreen;

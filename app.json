@@ -16,7 +16,8 @@
 				"foregroundImage": "./assets/images/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
 			},
-			"edgeToEdgeEnabled": true
+			"edgeToEdgeEnabled": true,
+			"package": "com.anonymous.alarmia"
 		},
 		"web": {
 			"bundler": "metro",
@@ -24,31 +25,6 @@
 			"favicon": "./assets/images/favicon.png"
 		},
 		"plugins": [
-			[
-				"@react-native-community/datetimepicker",
-				{
-					"android": {
-						"datePicker": {
-							"colorAccent": {
-								"light": "#FF5722"
-							},
-							"textColorPrimary": {
-								"light": "#FF5722"
-							}
-						},
-						"timePicker": {
-							"background": {
-								"light": "#FF5722",
-								"dark": "#383838"
-							},
-							"numbersBackgroundColor": {
-								"light": "#FF5722",
-								"dark": "#383838"
-							}
-						}
-					}
-				}
-			],
 			"expo-router",
 			[
 				"expo-splash-screen",
