@@ -26,26 +26,34 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
         params: { id: alarm.id },
       }}
     >
-      <View style={styles.container} {...rest}>
-        <View style={styles.leftContainer}>
-          {alarm.description && (
-            <Text style={styles.description}>{alarm.description}</Text>
-          )}
-          <Text style={styles.time}>{alarm.time24}</Text>
-          <Text style={styles.activeDays}>{alarm.activeDays}</Text>
+      <View style={styles.wrapper}>
+        <View style={styles.container} {...rest}>
+          <View style={styles.leftContainer}>
+            {alarm.description && (
+              <Text style={styles.description}>{alarm.description}</Text>
+            )}
+            <Text style={styles.time}>{alarm.time24}</Text>
+            <Text style={styles.activeDays}>{alarm.activeDays}</Text>
+          </View>
+          <View style={styles.rightContainer}>
+            <Switch value={isOn} onValueChange={() => setIsOn((x) => !x)} />
+            <AlarmMenu alarm={alarm} />
+          </View>
         </View>
-        <View style={styles.rightContainer}>
-          <Switch value={isOn} onValueChange={() => setIsOn((x) => !x)} />
-          <AlarmMenu alarm={alarm} />
-        </View>
+        <Divider style={styles.divider} />
       </View>
-      <Divider style={styles.divider} />
     </Link>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  },
   container: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'row',
     gap: 20,
@@ -72,7 +80,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
   },
-  divider: { marginHorizontal: 20 },
+  divider: {
+    marginHorizontal: 20,
+  },
 });
 
 export default AlarmCard;
