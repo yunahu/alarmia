@@ -31,7 +31,7 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: 'black',
     paddingTop: 30,
     paddingBottom: 50,
