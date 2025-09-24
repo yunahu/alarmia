@@ -1,8 +1,8 @@
-import { StyleSheet, View, ViewProps } from 'react-native';
-
-import MoreButton from '@/components/MoreButton';
 import { useState } from 'react';
+import { StyleSheet, View, ViewProps } from 'react-native';
 import { Switch, Text } from 'react-native-paper';
+
+import AlarmMenu from './components/AlarmMenu';
 
 export interface Alarm {
   id: number;
@@ -29,7 +29,7 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
       </View>
       <View style={styles.rightContainer}>
         <Switch value={isOn} onValueChange={() => setIsOn((x) => !x)} />
-        <MoreButton onPress={() => {}} />
+        <AlarmMenu alarm={alarm} />
       </View>
     </View>
   );
