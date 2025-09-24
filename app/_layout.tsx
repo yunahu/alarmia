@@ -1,7 +1,10 @@
 import { Stack } from 'expo-router';
 import { PaperProvider } from 'react-native-paper';
+import { en, registerTranslation } from 'react-native-paper-dates';
 
-export default function RootLayout() {
+registerTranslation('en', en);
+
+const RootLayout = () => {
   return (
     <PaperProvider>
       <Stack
@@ -23,4 +26,6 @@ export default function RootLayout() {
       </Stack>
     </PaperProvider>
   );
-}
+};
+
+export default RootLayout;

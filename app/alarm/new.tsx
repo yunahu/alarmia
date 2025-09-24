@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
 
@@ -14,7 +14,7 @@ const getNow = (): Time24 => {
 };
 
 const NewAlarmScreen = () => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [time, setTime] = useState<Time24>(getNow());
   const onConfirm = (time24: Time24) => {
     setTime(time24);
@@ -23,9 +23,12 @@ const NewAlarmScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text>
-        {time.hours}:{time.minutes}
-      </Text>
+      <Pressable onPress={() => setVisible(true)}>
+        <Text style={styles.time}>
+          {time.hours.toString().padStart(2, '0')}:
+          {time.minutes.toString().padStart(2, '0')}
+        </Text>
+      </Pressable>
       <Button onPress={() => setVisible(true)} uppercase={false}>
         Edit time
       </Button>
@@ -35,6 +38,7 @@ const NewAlarmScreen = () => {
         onConfirm={onConfirm}
         hours={time.hours}
         minutes={time.minutes}
+        use24HourClock
       />
     </View>
   );
@@ -48,6 +52,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  time: {
+    fontSize: 80,
   },
 });
 
