@@ -14,8 +14,8 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="alarms/new" />
-        <Stack.Screen name="alarms/[id]" />
+        <Stack.Screen name="alarm/new" />
+        <Stack.Screen name="alarm/[id]" />
         <Stack.Screen
           name="settings"
           options={{ headerShown: true, title: 'Settings' }}
