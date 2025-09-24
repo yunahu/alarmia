@@ -1,6 +1,7 @@
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Button, Text, TextInput } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
 
 import RepeatDaysPicker, {
@@ -22,6 +23,8 @@ const NewAlarmScreen = () => {
   const [visible, setVisible] = useState(true);
   const [repeatDays, setRepeatDays] = useState<RepeatDays>(DEFAULT_DAYS);
   const [time, setTime] = useState<Time24>(getNow());
+  const [description, setDescription] = useState<string | undefined>();
+  const router = useRouter();
   const onConfirm = (time24: Time24) => {
     setTime(time24);
     setVisible(false);
@@ -47,6 +50,17 @@ const NewAlarmScreen = () => {
           repeatDays={repeatDays}
           setRepeatDays={setRepeatDays}
         />
+        <TextInput
+          style={styles.description}
+          value={description}
+          onChangeText={(newDescription) => setDescription(newDescription)}
+        />
+        <View style={styles.cancelAndSave}>
+          <Button style={styles.buttons} onPress={router.back}>
+            CANCEL
+          </Button>
+          <Button style={styles.buttons}>SAVE</Button>
+        </View>
       </ScrollView>
       <TimePickerModal
         visible={visible}
@@ -72,12 +86,29 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     display: 'flex',
     alignItems: 'center',
+    paddingHorizontal: 30,
   },
   time: {
     fontSize: 80,
   },
   daysPicker: {
     marginTop: 25,
+  },
+  description: {
+    width: '100%',
+    height: 30,
+    marginTop: 30,
+    backgroundColor: 'transparent',
+  },
+  cancelAndSave: {
+    marginVertical: 30,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  buttons: {
+    width: '50%',
   },
 });
 
