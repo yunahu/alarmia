@@ -13,8 +13,9 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     alignItems: 'center',
-    marginVertical: 30,
-    marginHorizontal: 10,
+    marginTop: 60,
+    marginBottom: 30,
+    marginHorizontal: 20,
   },
   message: {
     fontSize: 24,

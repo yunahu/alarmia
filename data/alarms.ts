@@ -3,13 +3,11 @@ import { Alarm } from '@/components/Alarm';
 const alarms: Alarm[] = [
   {
     id: 1,
-    description: 'Alarm 1',
-    time24: '13:12',
+    time24: '01:12',
     activeDays: 'S M T W T F S',
   },
   {
     id: 2,
-    description: 'Alarm 2',
     time24: '20:00',
     activeDays: 'S M T W T F S',
   },

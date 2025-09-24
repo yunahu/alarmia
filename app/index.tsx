@@ -1,24 +1,30 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import AddButton from '@/components/AddButton';
 import AlarmCard from '@/components/Alarm';
 import HomeMenu from '@/components/HomeMenu';
 import NextAlarm from '@/components/NextAlarm';
 import alarms from '@/data/alarms';
+import { Divider } from 'react-native-paper';
 
 const HomeScreen = () => {
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        stickyHeaderIndices={[1]}
+        showsVerticalScrollIndicator={false}
+      >
         <NextAlarm />
         <View style={styles.homeMenuContainer}>
           <HomeMenu />
         </View>
-        <View style={styles.alarmContainer}>
-          {alarms.map((x) => (
-            <AlarmCard key={x.id} alarm={x} />
-          ))}
-        </View>
+        <Divider style={styles.divider} />
+        {alarms.map((x) => (
+          <AlarmCard key={x.id} alarm={x} />
+        ))}
       </ScrollView>
+      <AddButton onPress={() => alert('pressed')} />
     </View>
   );
 };
@@ -26,19 +32,23 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    backgroundColor: 'black',
+    paddingTop: 30,
+    paddingBottom: 50,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    paddingBottom: 110,
   },
   homeMenuContainer: {
     display: 'flex',
     alignItems: 'flex-end',
-    paddingBottom: 20,
+    backgroundColor: 'black',
+    paddingRight: 20,
   },
-  alarmContainer: {
-    gap: 30,
-  },
-  contentContainer: {
-    flexGrow: 1,
-    paddingHorizontal: 20,
-    paddingBottom: 80,
+  divider: {
+    marginHorizontal: 20,
+    marginTop: 10,
   },
 });
 

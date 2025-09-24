@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
-import { Switch, Text } from 'react-native-paper';
+import { Divider, Switch, Text } from 'react-native-paper';
 
 import AlarmMenu from './components/AlarmMenu';
 
@@ -19,18 +19,21 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
   const [isOn, setIsOn] = useState(false);
 
   return (
-    <View style={styles.container} {...rest}>
-      <View style={styles.leftContainer}>
-        {alarm.description && (
-          <Text style={styles.description}>{alarm.description}</Text>
-        )}
-        <Text style={styles.time}>{alarm.time24}</Text>
-        <Text style={styles.activeDays}>{alarm.activeDays}</Text>
+    <View>
+      <View style={styles.container} {...rest}>
+        <View style={styles.leftContainer}>
+          {alarm.description && (
+            <Text style={styles.description}>{alarm.description}</Text>
+          )}
+          <Text style={styles.time}>{alarm.time24}</Text>
+          <Text style={styles.activeDays}>{alarm.activeDays}</Text>
+        </View>
+        <View style={styles.rightContainer}>
+          <Switch value={isOn} onValueChange={() => setIsOn((x) => !x)} />
+          <AlarmMenu alarm={alarm} />
+        </View>
       </View>
-      <View style={styles.rightContainer}>
-        <Switch value={isOn} onValueChange={() => setIsOn((x) => !x)} />
-        <AlarmMenu alarm={alarm} />
-      </View>
+      <Divider style={styles.divider} />
     </View>
   );
 };
@@ -38,29 +41,32 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    padding: 20,
-    backgroundColor: 'grey',
-    borderRadius: 10,
     flexDirection: 'row',
     gap: 20,
   },
   leftContainer: {
     flex: 1,
+    padding: 20,
+    display: 'flex',
+    justifyContent: 'center',
   },
   activeDays: {
     fontSize: 14,
   },
   time: {
-    fontSize: 25,
+    fontSize: 30,
   },
   description: {
-    fontSize: 16,
+    fontSize: 18,
+    marginBottom: 10,
   },
   rightContainer: {
     display: 'flex',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
+    padding: 20,
   },
+  divider: { marginHorizontal: 20 },
 });
 
 export default AlarmCard;
