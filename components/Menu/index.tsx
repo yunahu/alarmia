@@ -1,5 +1,6 @@
 import { Href, useRouter } from 'expo-router';
 import * as React from 'react';
+import { GestureResponderEvent } from 'react-native';
 import { MenuItemProps, Menu as PaperMenu } from 'react-native-paper';
 
 import MoreButton from '@/components/MoreButton';
@@ -7,6 +8,7 @@ import MoreButton from '@/components/MoreButton';
 export interface MenuItem extends MenuItemProps {
   key: string;
   href?: Href;
+  onPress: (e: GestureResponderEvent) => void;
 }
 
 interface MenuProps {
@@ -25,13 +27,19 @@ const Menu = ({ items }: MenuProps) => {
       onDismiss={closeMenu}
       anchor={<MoreButton onPress={openMenu} />}
     >
-      {items.map(({ key, href, onPress, ...rest }) => (
-        <PaperMenu.Item
-          key={key}
-          onPress={href ? () => router.navigate(href) : onPress}
-          {...rest}
-        />
-      ))}
+      {items.map(({ key, href, onPress, ...rest }) => {
+        return (
+          <PaperMenu.Item
+            key={key}
+            onPress={(e: GestureResponderEvent) => {
+              if (href) router.navigate(href);
+              else onPress(e);
+              setVisible(false);
+            }}
+            {...rest}
+          />
+        );
+      })}
     </PaperMenu>
   );
 };

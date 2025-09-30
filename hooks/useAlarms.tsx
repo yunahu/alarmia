@@ -13,12 +13,14 @@ interface AlarmContextType {
   alarms: Alarm[];
   areAlarmsLoading: boolean;
   createAlarm: (newAlarm: Alarm) => Promise<void>;
+  deleteAlarm: (id: string) => Promise<void>;
 }
 
 const AlarmContext = createContext<AlarmContextType>({
   alarms: [],
   areAlarmsLoading: false,
   createAlarm: async () => {},
+  deleteAlarm: async () => {},
 });
 
 export const AlarmProvider = ({ children }: PropsWithChildren) => {
@@ -47,8 +49,21 @@ export const AlarmProvider = ({ children }: PropsWithChildren) => {
     setAlarms(combined);
   };
 
+  const deleteAlarm = async (id: string) => {
+    const storedAlarms = await getStoredAlarms();
+    const index = storedAlarms.findIndex((x) => x.id === id);
+
+    if (index === -1) throw new Error(`Alarm not found`);
+
+    const removed = storedAlarms.toSpliced(index, 1);
+    await setStoredAlarms(removed);
+    setAlarms(removed);
+  };
+
   return (
-    <AlarmContext value={{ alarms, areAlarmsLoading, createAlarm }}>
+    <AlarmContext
+      value={{ alarms, areAlarmsLoading, createAlarm, deleteAlarm }}
+    >
       {children}
     </AlarmContext>
   );
