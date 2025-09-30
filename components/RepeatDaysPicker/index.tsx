@@ -3,7 +3,7 @@ import { StyleSheet, View, ViewProps } from 'react-native';
 
 import DayToggleButton from './DayToggleButton';
 
-export const DEFAULT_DAYS = {
+export const DEFAULT_DAYS_ALL_ACTIVE = {
   sun: true,
   mon: true,
   tue: true,
@@ -13,7 +13,7 @@ export const DEFAULT_DAYS = {
   sat: true,
 };
 
-export type RepeatDays = typeof DEFAULT_DAYS;
+export type RepeatDays = typeof DEFAULT_DAYS_ALL_ACTIVE;
 
 export type DayOfWeek = keyof RepeatDays;
 
@@ -22,7 +22,7 @@ export interface RepeatDaysPickerProps extends ViewProps {
   setRepeatDays: Dispatch<SetStateAction<RepeatDays>>;
 }
 
-const DAYS_OF_WEEK: DayOfWeek[] = [
+export const DAYS_OF_WEEK: DayOfWeek[] = [
   'sun',
   'mon',
   'tue',

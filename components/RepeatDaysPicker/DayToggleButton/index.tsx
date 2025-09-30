@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 
+import { firstLetterCapitalized } from '@/helpers/helpers';
 import { DayOfWeek, RepeatDaysPickerProps } from '..';
 
 interface DayToggleButtonProps extends RepeatDaysPickerProps {
@@ -24,7 +25,7 @@ const DayToggleButton = ({
       style={[styles.container, repeatDays[day] ? styles.active : {}]}
       onPress={toggle}
     >
-      <Text>{day.substring(0, 1).toUpperCase()}</Text>
+      <Text>{firstLetterCapitalized(day)}</Text>
     </Pressable>
   );
 };

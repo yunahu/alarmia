@@ -3,13 +3,15 @@ import { useState } from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
 import { Divider, Switch, Text } from 'react-native-paper';
 
+import { firstLetterCapitalized } from '@/helpers/helpers';
+import { DAYS_OF_WEEK, RepeatDays } from '../RepeatDaysPicker';
 import AlarmMenu from './components/AlarmMenu';
 
 export interface Alarm {
-  id: number;
+  id: string;
   description?: string;
   time24: string;
-  activeDays: string;
+  repeatDays: RepeatDays;
 }
 
 interface AlarmCardProps extends ViewProps {
@@ -33,7 +35,19 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
               <Text style={styles.description}>{alarm.description}</Text>
             )}
             <Text style={styles.time}>{alarm.time24}</Text>
-            <Text style={styles.activeDays}>{alarm.activeDays}</Text>
+            <Text style={styles.repeatedDays}>
+              {DAYS_OF_WEEK.map((day) => (
+                <Text
+                  key={day}
+                  style={[
+                    styles.days,
+                    alarm.repeatDays[day] ? styles.repeatedDays : {},
+                  ]}
+                >
+                  {firstLetterCapitalized(day)}
+                </Text>
+              ))}
+            </Text>
           </View>
           <View style={styles.rightContainer}>
             <Switch value={isOn} onValueChange={() => setIsOn((x) => !x)} />
@@ -64,8 +78,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
   },
-  activeDays: {
+  days: {
     fontSize: 14,
+    letterSpacing: 8,
+  },
+  repeatedDays: {
+    color: 'violet',
   },
   time: {
     fontSize: 30,

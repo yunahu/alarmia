@@ -5,9 +5,11 @@ import AddButton from '@/components/AddButton';
 import AlarmCard from '@/components/Alarm';
 import HomeMenu from '@/components/HomeMenu';
 import NextAlarm from '@/components/NextAlarm';
-import alarms from '@/data/alarms';
+import useAlarms from '@/hooks/useAlarms';
 
 const HomeScreen = () => {
+  const { alarms } = useAlarms();
+
   return (
     <View style={styles.container}>
       <ScrollView
