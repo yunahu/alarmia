@@ -1,4 +1,4 @@
-import { Alarm } from '@/components/Alarm';
+import { Alarm } from '@/components/AlarmMenu';
 import Menu, { MenuItem } from '@/components/Menu';
 import useAlarms from '@/hooks/useAlarms';
 

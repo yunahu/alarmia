@@ -1,6 +1,6 @@
 import storage from '@react-native-async-storage/async-storage';
 
-import { Alarm } from '@/components/Alarm';
+import { Alarm } from '@/components/AlarmMenu';
 
 export const setStoredAlarms = async (alarms: Alarm[]) =>
   storage.setItem('alarms', JSON.stringify(alarms));

@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 
-import { Alarm } from '@/components/Alarm';
+import { Alarm } from '@/components/AlarmMenu';
 import { getStoredAlarms, setStoredAlarms } from '@/services/storage';
 
 type UpdateAlarm = (
