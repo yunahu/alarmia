@@ -44,6 +44,7 @@ const NewAlarmScreen = () => {
         description,
         time24: `${toTwoDigits(time24.hours)}:${toTwoDigits(time24.minutes)}`,
         repeatDays,
+        isOn: true,
       });
     } catch (err) {
       console.error(err);

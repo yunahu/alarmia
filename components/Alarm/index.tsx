@@ -4,6 +4,7 @@ import { StyleSheet, View, ViewProps } from 'react-native';
 import { Divider, Switch, Text } from 'react-native-paper';
 
 import { firstLetterCapitalized } from '@/helpers/helpers';
+import useAlarms from '@/hooks/useAlarms';
 import { DAYS_OF_WEEK, RepeatDays } from '../RepeatDaysPicker';
 import AlarmMenu from './components/AlarmMenu';
 
@@ -12,6 +13,7 @@ export interface Alarm {
   description?: string;
   time24: string;
   repeatDays: RepeatDays;
+  isOn: boolean;
 }
 
 interface AlarmCardProps extends ViewProps {
@@ -19,7 +21,8 @@ interface AlarmCardProps extends ViewProps {
 }
 
 const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
-  const [isOn, setIsOn] = useState(false);
+  const [on, setOn] = useState<boolean>(alarm.isOn);
+  const { updateAlarm } = useAlarms();
 
   return (
     <Link
@@ -50,7 +53,13 @@ const AlarmCard = ({ alarm, ...rest }: AlarmCardProps) => {
             </Text>
           </View>
           <View style={styles.rightContainer}>
-            <Switch value={isOn} onValueChange={() => setIsOn((x) => !x)} />
+            <Switch
+              value={on}
+              onValueChange={(x) => {
+                setOn(x);
+                updateAlarm(alarm.id, { isOn: x });
+              }}
+            />
             <AlarmMenu alarm={alarm} />
           </View>
         </View>
