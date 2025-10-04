@@ -85,7 +85,7 @@ const AlarmDetailScreen = () => {
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <ActivityIndicator animating={true} />
+        <ActivityIndicator animating={true} size="large" />
       ) : (
         <View style={styles.innerContainer}>
           <ScrollView
@@ -137,8 +137,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'black',
     flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
   },
   innerContainer: {
+    flex: 1,
     paddingTop: 30,
     paddingBottom: 50,
   },

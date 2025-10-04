@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Divider } from 'react-native-paper';
+import { ActivityIndicator, Divider } from 'react-native-paper';
 
 import AddButton from '@/components/AddButton';
 import AlarmCard from '@/components/AlarmMenu';
@@ -8,25 +8,31 @@ import NextAlarm from '@/components/NextAlarm';
 import useAlarms from '@/hooks/useAlarms';
 
 const HomeScreen = () => {
-  const { alarms } = useAlarms();
+  const { areLoading, alarms } = useAlarms();
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        stickyHeaderIndices={[1]}
-        showsVerticalScrollIndicator={false}
-      >
-        <NextAlarm />
-        <View style={styles.homeMenuContainer}>
-          <HomeMenu />
+      {areLoading ? (
+        <ActivityIndicator animating={true} size="large" />
+      ) : (
+        <View style={styles.innerContainer}>
+          <ScrollView
+            contentContainerStyle={styles.contentContainer}
+            stickyHeaderIndices={[1]}
+            showsVerticalScrollIndicator={false}
+          >
+            <NextAlarm />
+            <View style={styles.homeMenuContainer}>
+              <HomeMenu />
+            </View>
+            <Divider style={styles.divider} />
+            {alarms.map((x) => (
+              <AlarmCard key={x.id} alarm={x} />
+            ))}
+          </ScrollView>
+          <AddButton />
         </View>
-        <Divider style={styles.divider} />
-        {alarms.map((x) => (
-          <AlarmCard key={x.id} alarm={x} />
-        ))}
-      </ScrollView>
-      <AddButton />
+      )}
     </View>
   );
 };
@@ -35,6 +41,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  innerContainer: {
+    flex: 1,
     paddingTop: 30,
     paddingBottom: 50,
   },
