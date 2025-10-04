@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
 
 import RepeatDaysPicker, {
@@ -23,7 +23,7 @@ const getNow = () => {
 
 const AlarmDetailScreen = () => {
   const { id } = useLocalSearchParams();
-  const { areLoading, createAlarm, getAlarm } = useAlarms();
+  const { areLoading, createAlarm, getAlarm, updateAlarm } = useAlarms();
   const [description, setDescription] = useState<string | undefined>();
   const [isPickerVisible, setIsPickerVisible] = useState<boolean>(id === 'new');
   const [repeatDays, setRepeatDays] = useState<RepeatDays>(
@@ -57,12 +57,24 @@ const AlarmDetailScreen = () => {
 
   const saveAndGoBack = async () => {
     try {
-      await createAlarm({
-        description,
-        time24: `${toTwoDigits(time24.hours)}:${toTwoDigits(time24.minutes)}`,
-        repeatDays,
-        isOn: true,
-      });
+      if (id === 'new') {
+        await createAlarm({
+          description,
+          time24: `${toTwoDigits(time24.hours)}:${toTwoDigits(time24.minutes)}`,
+          repeatDays,
+          isOn: true,
+        });
+      } else {
+        if (typeof id === 'string')
+          await updateAlarm(id, {
+            description,
+            time24: `${toTwoDigits(time24.hours)}:${toTwoDigits(
+              time24.minutes
+            )}`,
+            repeatDays,
+            isOn: true,
+          });
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -72,53 +84,61 @@ const AlarmDetailScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        <Pressable onPress={() => setIsPickerVisible(true)}>
-          <Text style={styles.time}>
-            {toTwoDigits(time24.hours)}:{toTwoDigits(time24.minutes)}
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => setIsPickerVisible(true)}>
-          <Text>EDIT TIME</Text>
-        </Pressable>
-        <RepeatDaysPicker
-          style={styles.daysPicker}
-          repeatDays={repeatDays}
-          setRepeatDays={setRepeatDays}
-        />
-        <TextInput
-          style={styles.description}
-          value={description}
-          onChangeText={(newDescription) => setDescription(newDescription)}
-        />
-        <View style={styles.cancelAndSave}>
-          <Button style={styles.buttons} onPress={router.back}>
-            CANCEL
-          </Button>
-          <Button style={styles.buttons} onPress={saveAndGoBack}>
-            SAVE
-          </Button>
+      {isLoading ? (
+        <ActivityIndicator animating={true} />
+      ) : (
+        <View style={styles.innerContainer}>
+          <ScrollView
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <Pressable onPress={() => setIsPickerVisible(true)}>
+              <Text style={styles.time}>
+                {toTwoDigits(time24.hours)}:{toTwoDigits(time24.minutes)}
+              </Text>
+            </Pressable>
+            <Pressable onPress={() => setIsPickerVisible(true)}>
+              <Text>EDIT TIME</Text>
+            </Pressable>
+            <RepeatDaysPicker
+              style={styles.daysPicker}
+              repeatDays={repeatDays}
+              setRepeatDays={setRepeatDays}
+            />
+            <TextInput
+              style={styles.description}
+              value={description}
+              onChangeText={(newDescription) => setDescription(newDescription)}
+            />
+            <View style={styles.cancelAndSave}>
+              <Button style={styles.buttons} onPress={router.back}>
+                CANCEL
+              </Button>
+              <Button style={styles.buttons} onPress={saveAndGoBack}>
+                SAVE
+              </Button>
+            </View>
+          </ScrollView>
+          <TimePickerModal
+            visible={isPickerVisible}
+            onDismiss={() => setIsPickerVisible(false)}
+            onConfirm={saveAndClose}
+            hours={time24.hours}
+            minutes={time24.minutes}
+            use24HourClock
+          />
         </View>
-      </ScrollView>
-      <TimePickerModal
-        visible={isPickerVisible}
-        onDismiss={() => setIsPickerVisible(false)}
-        onConfirm={saveAndClose}
-        hours={time24.hours}
-        minutes={time24.minutes}
-        use24HourClock
-      />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: 'black',
+    flex: 1,
+  },
+  innerContainer: {
     paddingTop: 30,
     paddingBottom: 50,
   },
