@@ -12,8 +12,10 @@ const DayToggleButton = ({
   day,
   repeatDays,
   setRepeatDays,
+  setIsChanged,
 }: DayToggleButtonProps) => {
   const toggle = () => {
+    setIsChanged(true);
     setRepeatDays((prev) => ({
       ...prev,
       [day]: !prev[day],

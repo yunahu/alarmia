@@ -20,6 +20,7 @@ export type DayOfWeek = keyof RepeatDays;
 export interface RepeatDaysPickerProps extends ViewProps {
   repeatDays: RepeatDays;
   setRepeatDays: Dispatch<SetStateAction<RepeatDays>>;
+  setIsChanged: Dispatch<SetStateAction<boolean>>;
 }
 
 export const DAYS_OF_WEEK: DayOfWeek[] = [
@@ -35,6 +36,7 @@ export const DAYS_OF_WEEK: DayOfWeek[] = [
 const RepeatDaysPicker = ({
   repeatDays,
   setRepeatDays,
+  setIsChanged,
   style,
 }: RepeatDaysPickerProps) => {
   return (
@@ -45,6 +47,7 @@ const RepeatDaysPicker = ({
           day={day}
           repeatDays={repeatDays}
           setRepeatDays={setRepeatDays}
+          setIsChanged={setIsChanged}
         />
       ))}
     </View>

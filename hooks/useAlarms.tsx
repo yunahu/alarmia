@@ -35,6 +35,9 @@ const AlarmContext = createContext<AlarmContextType>({
   deleteAlarm: async () => {},
 });
 
+const compareByTime = ({ time24: a }: Alarm, { time24: b }: Alarm) =>
+  a.localeCompare(b);
+
 export const AlarmProvider = ({ children }: PropsWithChildren) => {
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [areLoading, setAreLoading] = useState<boolean>(true);
@@ -57,14 +60,17 @@ export const AlarmProvider = ({ children }: PropsWithChildren) => {
   const createAlarm: CreateAlarm = async (properties) => {
     if (areLoading) throw new Error(`Loading`);
     setAreLoading(true);
+
     const storedAlarms = await getStoredAlarms();
     const newAlarm = {
       id: Crypto.randomUUID(),
       ...properties,
     };
     const combined = [...storedAlarms, newAlarm];
-    await setStoredAlarms(combined);
-    setAlarms(combined);
+    const sorted = combined.sort(compareByTime);
+    await setStoredAlarms(sorted);
+    setAlarms(sorted);
+
     setAreLoading(false);
   };
 
@@ -77,13 +83,15 @@ export const AlarmProvider = ({ children }: PropsWithChildren) => {
     const targetIndex = alarms.findIndex((x) => x.id === id);
     if (targetIndex === -1) throw new Error(`Alarm not found`);
 
-    const alarmsCopy = structuredClone(alarms);
-    alarmsCopy[targetIndex] = {
-      ...alarmsCopy[targetIndex],
+    const clone = structuredClone(alarms);
+    clone[targetIndex] = {
+      ...clone[targetIndex],
       ...updates,
     };
-    await setStoredAlarms(alarmsCopy);
-    setAlarms(alarmsCopy);
+    clone.sort(compareByTime);
+    await setStoredAlarms(clone);
+    setAlarms(clone);
+
     setAreLoading(false);
   };
 

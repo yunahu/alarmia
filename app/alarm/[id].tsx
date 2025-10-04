@@ -31,11 +31,18 @@ const AlarmDetailScreen = () => {
   );
   const [time24, setTime24] = useState<Time24>(getNow());
   const [isLoading, setIsLoading] = useState<boolean>(id !== 'new');
+  const [isChanged, setIsChanged] = useState<boolean>(false);
   const router = useRouter();
 
-  const saveAndClose = (time24: Time24) => {
+  const saveAndClosePicker = (time24: Time24) => {
+    setIsChanged(true);
     setTime24(time24);
     setIsPickerVisible(false);
+  };
+
+  const handleCancel = () => {
+    if (isChanged) console.log('unsaved'); // TODO:
+    router.back();
   };
 
   useEffect(() => {
@@ -49,6 +56,7 @@ const AlarmDetailScreen = () => {
       if (target.description) setDescription(target.description);
       setRepeatDays(target.repeatDays);
       setTime24(timeStrToObj(target.time24));
+
       setIsLoading(false);
     };
 
@@ -65,20 +73,23 @@ const AlarmDetailScreen = () => {
           isOn: true,
         });
       } else {
-        if (typeof id === 'string')
-          await updateAlarm(id, {
+        if (typeof id === 'string') {
+          if (!isChanged) return;
+          const properties = {
             description,
             time24: `${toTwoDigits(time24.hours)}:${toTwoDigits(
               time24.minutes
             )}`,
             repeatDays,
             isOn: true,
-          });
+          };
+          await updateAlarm(id, properties);
+        }
       }
+
+      router.back();
     } catch (err) {
       console.error(err);
-    } finally {
-      router.back();
     }
   };
 
@@ -104,14 +115,18 @@ const AlarmDetailScreen = () => {
               style={styles.daysPicker}
               repeatDays={repeatDays}
               setRepeatDays={setRepeatDays}
+              setIsChanged={setIsChanged}
             />
             <TextInput
               style={styles.description}
               value={description}
-              onChangeText={(newDescription) => setDescription(newDescription)}
+              onChangeText={(newDescription) => {
+                setIsChanged(true);
+                setDescription(newDescription);
+              }}
             />
             <View style={styles.cancelAndSave}>
-              <Button style={styles.buttons} onPress={router.back}>
+              <Button style={styles.buttons} onPress={handleCancel}>
                 CANCEL
               </Button>
               <Button style={styles.buttons} onPress={saveAndGoBack}>
@@ -122,7 +137,7 @@ const AlarmDetailScreen = () => {
           <TimePickerModal
             visible={isPickerVisible}
             onDismiss={() => setIsPickerVisible(false)}
-            onConfirm={saveAndClose}
+            onConfirm={saveAndClosePicker}
             hours={time24.hours}
             minutes={time24.minutes}
             use24HourClock
