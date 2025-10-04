@@ -9,7 +9,7 @@ const AddButton = () => {
     <FAB
       icon="plus"
       style={styles.fab}
-      onPress={() => router.navigate('/alarm/new')}
+      onPress={() => router.navigate(`/alarm/new`)}
     />
   );
 };

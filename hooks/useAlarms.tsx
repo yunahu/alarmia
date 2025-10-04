@@ -1,3 +1,4 @@
+import * as Crypto from 'expo-crypto';
 import {
   createContext,
   PropsWithChildren,
@@ -9,6 +10,8 @@ import {
 import { Alarm } from '@/components/AlarmMenu';
 import { getStoredAlarms, setStoredAlarms } from '@/services/storage';
 
+type CreateAlarm = (properties: Omit<Alarm, 'id'>) => Promise<Alarm | void>;
+
 type UpdateAlarm = (
   id: string,
   updates: Omit<Partial<Alarm>, 'id'>
@@ -16,81 +19,97 @@ type UpdateAlarm = (
 
 interface AlarmContextType {
   alarms: Alarm[];
-  isLoading: boolean;
-  createAlarm: (newAlarm: Alarm) => Promise<void>;
+  areLoading: boolean;
+  createAlarm: CreateAlarm;
+  getAlarm: (id: string) => Alarm | undefined;
   updateAlarm: UpdateAlarm;
   deleteAlarm: (id: string) => Promise<void>;
 }
 
 const AlarmContext = createContext<AlarmContextType>({
   alarms: [],
-  isLoading: false,
+  areLoading: true,
   createAlarm: async () => {},
+  getAlarm: () => undefined,
   updateAlarm: async () => {},
   deleteAlarm: async () => {},
 });
 
 export const AlarmProvider = ({ children }: PropsWithChildren) => {
   const [alarms, setAlarms] = useState<Alarm[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [areLoading, setAreLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const run = async () => {
       try {
-        const response = await getStoredAlarms();
-        setAlarms(response);
+        const stored = await getStoredAlarms();
+        setAlarms(stored);
       } catch (err) {
         console.error(err);
       } finally {
-        setIsLoading(false);
+        setAreLoading(false);
       }
     };
 
     run();
   }, []);
 
-  const createAlarm = async (newAlarm: Alarm) => {
-    setIsLoading(true);
+  const createAlarm: CreateAlarm = async (properties) => {
+    if (areLoading) throw new Error(`Loading`);
+    setAreLoading(true);
     const storedAlarms = await getStoredAlarms();
+    const newAlarm = {
+      id: Crypto.randomUUID(),
+      ...properties,
+    };
     const combined = [...storedAlarms, newAlarm];
     await setStoredAlarms(combined);
     setAlarms(combined);
-    setIsLoading(false);
+    setAreLoading(false);
   };
 
+  const getAlarm = (id: string) => alarms.find((x) => x.id === id);
+
   const updateAlarm: UpdateAlarm = async (id, updates) => {
-    setIsLoading(true);
-    const storedAlarms = await getStoredAlarms();
-    const targetIndex = storedAlarms.findIndex((x) => x.id === id);
+    if (areLoading) throw new Error(`Loading`);
+    setAreLoading(true);
+
+    const targetIndex = alarms.findIndex((x) => x.id === id);
     if (targetIndex === -1) throw new Error(`Alarm not found`);
 
-    const updated = {
-      ...storedAlarms[targetIndex],
+    const alarmsCopy = structuredClone(alarms);
+    alarmsCopy[targetIndex] = {
+      ...alarmsCopy[targetIndex],
       ...updates,
     };
-    storedAlarms[targetIndex] = updated;
-
-    await setStoredAlarms(storedAlarms);
-    setAlarms(storedAlarms);
-    setIsLoading(false);
+    await setStoredAlarms(alarmsCopy);
+    setAlarms(alarmsCopy);
+    setAreLoading(false);
   };
 
   const deleteAlarm = async (id: string) => {
-    setIsLoading(true);
-    const storedAlarms = await getStoredAlarms();
-    const index = storedAlarms.findIndex((x) => x.id === id);
+    if (areLoading) throw new Error(`Loading`);
+    setAreLoading(true);
 
-    if (index === -1) throw new Error(`Alarm not found`);
+    const targetIndex = alarms.findIndex((x) => x.id === id);
+    if (targetIndex === -1) throw new Error(`Alarm not found`);
 
-    const removed = storedAlarms.toSpliced(index, 1);
+    const removed = alarms.toSpliced(targetIndex, 1);
     await setStoredAlarms(removed);
     setAlarms(removed);
-    setIsLoading(false);
+    setAreLoading(false);
   };
 
   return (
     <AlarmContext
-      value={{ alarms, isLoading, createAlarm, updateAlarm, deleteAlarm }}
+      value={{
+        alarms,
+        areLoading,
+        createAlarm,
+        getAlarm,
+        updateAlarm,
+        deleteAlarm,
+      }}
     >
       {children}
     </AlarmContext>

@@ -12,7 +12,6 @@ const RootLayout = () => {
       <AlarmProvider>
         <Stack screenOptions={globalOptions}>
           <Stack.Screen name="index" />
-          <Stack.Screen name="alarm/new" />
           <Stack.Screen name="alarm/[id]" />
           <Stack.Screen name="settings" options={settingsOptions} />
         </Stack>

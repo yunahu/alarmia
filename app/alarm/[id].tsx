@@ -1,6 +1,5 @@
-import * as Crypto from 'expo-crypto';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
@@ -9,27 +8,29 @@ import RepeatDaysPicker, {
   DEFAULT_DAYS_ALL_ACTIVE,
   RepeatDays,
 } from '@/components/RepeatDaysPicker';
-import { toTwoDigits } from '@/helpers/helpers';
+import { timeStrToObj, toTwoDigits } from '@/helpers/helpers';
 import useAlarms from '@/hooks/useAlarms';
 
-interface Time24 {
+export interface Time24 {
   hours: number; // 0-23
   minutes: number;
 }
 
-const getNow = (): Time24 => {
+const getNow = () => {
   const now = new Date();
   return { hours: now.getHours(), minutes: now.getMinutes() };
 };
 
-const NewAlarmScreen = () => {
+const AlarmDetailScreen = () => {
+  const { id } = useLocalSearchParams();
+  const { areLoading, createAlarm, getAlarm } = useAlarms();
   const [description, setDescription] = useState<string | undefined>();
-  const [isPickerVisible, setIsPickerVisible] = useState(true);
+  const [isPickerVisible, setIsPickerVisible] = useState<boolean>(id === 'new');
   const [repeatDays, setRepeatDays] = useState<RepeatDays>(
     DEFAULT_DAYS_ALL_ACTIVE
   );
   const [time24, setTime24] = useState<Time24>(getNow());
-  const { createAlarm } = useAlarms();
+  const [isLoading, setIsLoading] = useState<boolean>(id !== 'new');
   const router = useRouter();
 
   const saveAndClose = (time24: Time24) => {
@@ -37,10 +38,26 @@ const NewAlarmScreen = () => {
     setIsPickerVisible(false);
   };
 
+  useEffect(() => {
+    const run = async () => {
+      if (typeof id !== 'string') throw new Error();
+      if (areLoading) return;
+      if (id === 'new') return;
+
+      const target = getAlarm(id);
+      if (!target) throw new Error('Alarm not found');
+      if (target.description) setDescription(target.description);
+      setRepeatDays(target.repeatDays);
+      setTime24(timeStrToObj(target.time24));
+      setIsLoading(false);
+    };
+
+    run();
+  }, [id, areLoading, getAlarm]);
+
   const saveAndGoBack = async () => {
     try {
       await createAlarm({
-        id: Crypto.randomUUID(),
         description,
         time24: `${toTwoDigits(time24.hours)}:${toTwoDigits(time24.minutes)}`,
         repeatDays,
@@ -136,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewAlarmScreen;
+export default AlarmDetailScreen;
